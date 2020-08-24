@@ -1,0 +1,47 @@
+X_A: Starting
+Y__A: Starting
+AA: Simple start.
+X_B: 0
+Y__B: 0
+AA: 1
+X_B: 2
+Y__B: 2
+AA: 2
+X_B: 4
+Y__B: 4
+AA: 3
+X_B: 6
+Y__B: 6
+--------------------- An error occurred in Y__
+ReferenceError: fooERROR is not defined
+    at GreenRepeatFromToByChunk._funct ((home)/GreenProcess/testCode.js:36:3)
+    at GreenRepeatFromToByChunk.contIterate ((home)/GreenProcess/GreenProcess.js:194:25)
+    at GreenGeneralFrame.continueProcess ((home)/GreenProcess/GreenProcess.js:108:21)
+    at GreenProcess.run ((home)/GreenProcess/GreenProcess.js:64:18)
+    at Timeout._onTimeout ((home)/GreenProcess/GreenProcess.js:79:33)
+    at listOnTimeout (internal/timers.js:549:17)
+    at processTimers (internal/timers.js:492:7)
+AA: 4
+X_B: 8
+AA: 5
+AA: 6
+AA: 7
+X_C: Ended loop (10) ... going to waste some time...
+AA: 8
+AA: 9
+AA: 10
+AA: 11
+AA: 12
+AA: 13
+AA: 14
+AA: 15
+AA: 16
+AA: 17
+AA: 18
+AA: 19
+AA: 20
+AA: Simple end.
+AA: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+X_D: Times up.
+X_E: Ending (Returned from D.)
+X_E: Ending (Returned from D.) -- returned from sequence.

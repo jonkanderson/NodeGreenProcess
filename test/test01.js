@@ -1,3 +1,8 @@
+/*
+ * This file tests the combination of multiple running GreenProcess'es.  The 
+ * common information must remain separate.  The threads should interleave.
+ */
+
 'use strict';
 
 // This hack allows the test to run in a browser as well as in Node.js.
@@ -23,7 +28,7 @@ const simpleSequence = (new GP.GreenChunkSequence())
 }).then((proc)=>{
 	console.log("AA: Simple end.");
 	return proc.common.arr;
-})
+}).end();
 
 /* This sequence contains an intended error, uses return values, and calls an async callback. */
 const complicatedSequence = (new GP.GreenChunkSequence())

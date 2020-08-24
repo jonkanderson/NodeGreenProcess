@@ -8,7 +8,7 @@ DATA_DIR=./regressionData
 all:
 
 .PHONY: test
-test: test01
+test: test01 test02
 
 # Compare the sequences separately.  Also, the beginning output should match. 
 .PHONY: test01
@@ -41,6 +41,13 @@ test01:
 		else echo "FAIL: Comparing heads."; fi
 	@echo "Comparing for unimportant difference:"
 	-diff $(DATA_DIR)/test01-out.txt $(OUT_DIR)/test01-out.txt
+
+.PHONY: test02
+test02:
+	mkdir -p $(OUT_DIR)
+	nodejs test02.js > $(OUT_DIR)/test02-out.txt
+	#diff $(DATA_DIR)/test02-out.txt $(OUT_DIR)/test02-out.txt
+	cat $(OUT_DIR)/test02-out.txt
 
 .PHONY: testLeaks
 testLeaks:

@@ -1,14 +1,16 @@
-# Node-GreenProcess
+# NodeGreenProcess
 
-This is a different approach to managing the proliferation of callback processes in Node.js.  A GreenProcess is a [green thread](https://en.wikipedia.org/wiki/Green_threads) where each contextual frame of the process is handled openly.  This is a reaction to my experimentations with Node.js parallelism. (See [NodeParallelismExperiments.md](https://gist.github.com/jonkanderson/c0e7f78c559ffa176f0b787b1a98e3d5).)
+This is a different approach to managing the proliferation of callback processes in Node.js.  A *GreenProcess* is a [green thread](https://en.wikipedia.org/wiki/Green_threads) where each contextual frame of the process is handled openly.  This is a reaction to my experimentations with Node.js parallelism. (See [NodeParallelismExperiments.md](https://gist.github.com/jonkanderson/c0e7f78c559ffa176f0b787b1a98e3d5).)
+
+The core of the system is the single file called *GreenProcess.js*.
 
 ## Prerequisites
 
-Node.js, of course. This code was developed on Debian Linux using generic tools.
+This requires Node.js, of course.  This code was developed on Debian Linux using generic tools.
 
 ## Tests
 
-Run tests by evaluating "`make test`" in the *tests* directory.  The expected output is found in the 8regressionData* directory.
+Run tests by evaluating "`make test`" in the *tests* directory.  The expected output is found in the *regressionData* directory.
 
 ## Using GreenProcess
 

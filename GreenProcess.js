@@ -265,6 +265,26 @@ class GreenRepeatWithFromToByChunk extends GreenAbstractChunk {
 	}
 }
 
+class GreenSendMessageWithObjSelArgsChunk extends GreenAbstractChunk {
+	constructor(f) {
+		super(f);
+	}
+
+	contStart(proc, frame) {
+		let frameVars = frame.chunkVars;
+		frameVars.receiver = proc.retValue.obj;
+		frameVars.selector = proc.retValue.sel;
+		frameVars.args = proc.retValue.args;
+		// proc.push(seq.newFrame({}));
+		frame.currentCont = this.contFinish;
+	}
+
+	contFinish(proc, frame) {
+		proc.retValue = frame.chunkVars.index;
+		proc.pop();
+	}
+}
+
 class GreenChunkSequence extends GreenAbstractChunk {
 	constructor() {
 		super(null);
@@ -287,6 +307,11 @@ class GreenChunkSequence extends GreenAbstractChunk {
 
 	repeatWithObjectOnKeysAndValues(f) {
 		this._chunkSequence.push(new GreenRepeatWithObjectOnKeysAndValuesChunk(f));
+		return this;
+	}
+
+	sendMessageWithObjSelArgs(f) {
+		this._chunkSequence.push(new GreenSendMessageWithObjSelArgsChunk(f));
 		return this;
 	}
 

@@ -8,7 +8,9 @@ const seq = (new GreenChunkSequence())
 	}).onError((proc, err)=>{
 		console.log("An error occurred.");
 		console.log(err);
-}).thenRepeatFromToBy(1, 100, 1, (proc, i)=>{
+}).then((proc)=>{
+	return {from:1, to:100, by:1};
+}).repeatWithFromToBy((proc, i)=>{
 	proc.common.arr.push(proc.common.id+" "+i);
 }).then((proc)=>{
 	console.log(proc.common.arr);

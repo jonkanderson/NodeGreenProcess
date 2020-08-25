@@ -19,18 +19,19 @@ const seq = (new GP.GreenChunkSequence())
 		console.log("--- An error occurred.");
 		console.log(err);
 }).then((proc)=>{
-	console.log("Start thenRepeatFromToBy().");
-}).thenRepeatFromToBy(1, 6, 2, (proc, i)=>{
-	console.log(i);
-}).then((proc)=>{
-	console.log("Start thenRepeatFromToByInRet().");
+	console.log("Start repeatWithFromToBy(3 to 12 by 3).");
 	return {from:3, to:12, by:3};
-}).thenRepeatFromToByInRet((proc, i)=>{
+}).repeatWithFromToBy((proc, i)=>{
 	console.log(i);
 }).then((proc)=>{
-	console.log("Start thenRepeatKeysAndValues().");
+	console.log("Start repeatWithFromToBy(-2 to 2).");
+	return {from:-2, to:2};
+}).repeatWithFromToBy((proc, i)=>{
+	console.log(i);
+}).then((proc)=>{
+	console.log("Start repeatWithObjectOnKeysAndValues().");
 	return {a:"This is A", b:"This is B", c:"And finally C"};
-}).thenRepeatKeysAndValuesWithRet((proc, k, v)=>{
+}).repeatWithObjectOnKeysAndValues((proc, k, v)=>{
 	console.log("Key: "+k);
 	console.log("Value: "+v);
 }).then((proc)=>{

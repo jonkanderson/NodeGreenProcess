@@ -185,49 +185,17 @@ class GreenFunctionChunk extends GreenAbstractChunk {
 	}
 }
 
-class GreenRepeatFromToByChunk extends GreenAbstractChunk {
-	constructor(firstIndex, lastIndex, interval, f) {
-		super(f);
-		this._firstIndex = firstIndex;
-		this._lastIndex = lastIndex;
-		this._interval = interval;
-	}
-
-	contStart(proc, frame) {
-		frame.chunkVars.index = this._firstIndex;
-		frame.currentCont = this.contIterate;
-	}
-
-	contIterate(proc, frame) {
-		try {
-			let frameVars = frame.chunkVars;
-			proc.retValue = this.doFunction(proc, frameVars.index);
-			frameVars.index += this._interval;
-			if (frameVars.index > this._lastIndex) {
-				frame.currentCont = this.contFinish;
-			}
-		} catch(err) {
-			proc.processError(err);
-			proc.activeStatus = "dead by error";
-		}
-	}
-
-	contFinish(proc, frame) {
-		proc.retValue = frame.chunkVars.index;
-		proc.pop();
-	}
-}
-
-class GreenRepeatKeysAndValuesWithRetChunk extends GreenAbstractChunk {
+class GreenRepeatWithObjectOnKeysAndValuesChunk extends GreenAbstractChunk {
 	constructor(f) {
 		super(f);
 	}
 
 	contStart(proc, frame) {
-		frame.chunkVars.index = 0;
-		frame.chunkVars.keys = Object.keys(proc.retValue);
-		frame.chunkVars.values = Object.values(proc.retValue);
-		if (frame.chunkVars.keys.length === 0) {
+		let frameVars = frame.chunkVars;
+		frameVars.index = 0;
+		frameVars.keys = Object.keys(proc.retValue);
+		frameVars.values = Object.values(proc.retValue);
+		if (frameVars.keys.length === 0) {
 			frame.currentCont = this.contFinish;
 		} else {
 			frame.currentCont = this.contIterate;
@@ -255,20 +223,21 @@ class GreenRepeatKeysAndValuesWithRetChunk extends GreenAbstractChunk {
 	}
 }
 
-class GreenRepeatFromToByInRetChunk extends GreenAbstractChunk {
+class GreenRepeatWithFromToByChunk extends GreenAbstractChunk {
 	constructor(f) {
 		super(f);
 	}
 
 	contStart(proc, frame) {
-		frame.chunkVars.index = proc.retValue.from;
-		frame.chunkVars.lastIndex = proc.retValue.to;
+		let frameVars = frame.chunkVars;
+		frameVars.index = proc.retValue.from;
+		frameVars.lastIndex = proc.retValue.to;
 		if (typeof proc.retValue.by !== 'undefined') {
-			frame.chunkVars.interval = proc.retValue.by;
+			frameVars.interval = proc.retValue.by;
 		} else {
-			frame.chunkVars.interval = 1;
+			frameVars.interval = 1;
 		}
-		if (frame.chunkVars.index > frame.chunkVars.lastIndex) {
+		if (frameVars.index > frameVars.lastIndex) {
 			frame.currentCont = this.contFinish;
 		} else {
 			frame.currentCont = this.contIterate;
@@ -311,18 +280,13 @@ class GreenChunkSequence extends GreenAbstractChunk {
 
 	then(f) { this._chunkSequence.push(new GreenFunctionChunk(f)); return this; }
 
-	thenRepeatFromToBy(firstIndex, lastIndex, interval, f) {
-		this._chunkSequence.push(new GreenRepeatFromToByChunk(firstIndex, lastIndex, interval, f));
+	repeatWithFromToBy(f) {
+		this._chunkSequence.push(new GreenRepeatWithFromToByChunk(f));
 		return this;
 	}
 
-	thenRepeatFromToByInRet(f) {
-		this._chunkSequence.push(new GreenRepeatFromToByInRetChunk(f));
-		return this;
-	}
-
-	thenRepeatKeysAndValuesWithRet(f) {
-		this._chunkSequence.push(new GreenRepeatKeysAndValuesWithRetChunk(f));
+	repeatWithObjectOnKeysAndValues(f) {
+		this._chunkSequence.push(new GreenRepeatWithObjectOnKeysAndValuesChunk(f));
 		return this;
 	}
 

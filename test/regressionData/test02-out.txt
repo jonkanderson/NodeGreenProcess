@@ -1,0 +1,20 @@
+Start repeatWithFromToBy(3 to 12 by 3).
+3
+6
+9
+12
+Start repeatWithFromToBy(-2 to 2).
+-2
+-1
+0
+1
+2
+Start repeatWithObjectOnKeysAndValues().
+Key: a
+Value: This is A
+Key: b
+Value: This is B
+Key: c
+Value: And finally C
+End.
+[]

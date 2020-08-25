@@ -46,8 +46,10 @@ test01:
 test02:
 	mkdir -p $(OUT_DIR)
 	nodejs test02.js > $(OUT_DIR)/test02-out.txt
-	#diff $(DATA_DIR)/test02-out.txt $(OUT_DIR)/test02-out.txt
-	cat $(OUT_DIR)/test02-out.txt
+	diff $(DATA_DIR)/test02-out.txt $(OUT_DIR)/test02-out.txt
+	@if [ "$$?" -eq "0" ]; then \
+		echo "PASS: Comparing output."; \
+		else echo "FAIL: Comparing output."; fi
 
 .PHONY: testLeaks
 testLeaks:

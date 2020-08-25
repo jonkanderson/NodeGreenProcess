@@ -22,7 +22,8 @@ const simpleSequence = (new GP.GreenChunkSequence())
 		console.log(err);
 }).then((proc)=>{
 	console.log("AA: Simple start.");
-}).thenRepeatFromToBy(1, 20, 1, (proc, i)=>{
+	return {from:1, to:20, by:1};
+}).repeatWithFromToBy((proc, i)=>{
 	console.log("AA: "+i);
 	proc.common.arr.push(i);
 }).then((proc)=>{
@@ -39,7 +40,8 @@ const complicatedSequence = (new GP.GreenChunkSequence())
 		console.log(err);
 }).then((proc)=>{
 	console.log(proc.common.id+"A: Starting");
-}).thenRepeatFromToBy(0, 9, 2, (proc, i)=>{
+	return {from:0, to:9, by:2};
+}).repeatWithFromToBy((proc, i)=>{
 	// Between values of i, other threads may come in.
 	console.log(proc.common.id+"B: "+i);
 	// The second green process has id:"Y__".

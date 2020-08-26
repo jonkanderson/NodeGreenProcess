@@ -1,5 +1,5 @@
 /*
- * Test a connection of chunk sequences to an OOP design where sequences are analogous to methods.
+ * Test an OOP design of behaviors where sequences are analogous to methods.
  */
 
 'use strict';
@@ -43,6 +43,7 @@ const TFirstBeh = { __proto__:TBaseBeh,
 		.then((proc)=>{
 			console.log("In foo."); })
 		.then((proc)=>{
+			console.log(proc.common);
 			return {obj:proc.self, sel:"superThing", args:{}}; })
 		.sendMessageWithObjSelArgs()
 		.then((proc)=>{

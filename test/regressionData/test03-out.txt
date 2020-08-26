@@ -1,5 +1,6 @@
 Start main.
 In foo.
+{ with: 111, and: 'Second' }
 In superThing.
 In thisThing.
 1

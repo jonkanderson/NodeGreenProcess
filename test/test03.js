@@ -13,46 +13,58 @@ if (typeof require !== 'undefined') {
 }
 
 //-------------------------------------------------------------------------
-class GreenObject {
+const TBaseBeh = {
+
+	_onError:(proc, err)=>{
+			console.log("--- An error occurred.");
+			console.log(err); },
+
+	superThing:(new GP.GreenChunkSequence())
+		.init((common)=>{})
+		.onError(this._onError)
+		.then((proc)=>{
+			console.log("In superThing.");
+			return "Returned from superThing";})
+		.end(),
+
+	__endOfBehavior:null
 }
 
-class GreenBehavior extends GreenObject {
-}
+const TFirstBeh = { __proto__:TBaseBeh,
 
-class GreenClass extends GreenBehavior {
-	constructor() {
-	}
+	fooWith_and_:(new GP.GreenChunkSequence())
+		.init((common)=>{})
+		.onError(this._onError)
+		.then((proc)=>{
+			console.log("In foo."); })
+		.then((proc)=>{
+			return {obj:proc.self, sel:"superThing", args:{}}; })
+		.sendMessageWithObjSelArgs()
+		.then((proc)=>{
+			console.log("Foo got: "+proc.retValue);
+			return "Returned from foo";})
+		.end(),
 
+	__endOfBehavior:null
 }
 
 //-------------------------------------------------------------------------
-const seq = (new GP.GreenChunkSequence())
-	.init((common)=>{
-		common.arr = new Array();
-	}).onError((proc, err)=>{
-		console.log("--- An error occurred.");
-		console.log(err);
-}).then((proc)=>{
-	console.log("Start repeatWithFromToBy(3 to 12 by 3).");
-	return {from:3, to:12, by:3};
-}).repeatWithFromToBy((proc, i)=>{
-	console.log(i);
-}).then((proc)=>{
-	console.log("Start repeatWithFromToBy(-2 to 2).");
-	return {from:-2, to:2};
-}).repeatWithFromToBy((proc, i)=>{
-	console.log(i);
-}).then((proc)=>{
-	console.log("Start repeatWithObjectOnKeysAndValues().");
-	return {a:"This is A", b:"This is B", c:"And finally C"};
-}).repeatWithObjectOnKeysAndValues((proc, k, v)=>{
-	console.log("Key: "+k);
-	console.log("Value: "+v);
-}).then((proc)=>{
-	console.log("End.");
-	return proc.common.arr;
-}).end();
+const mainSeq = (new GP.GreenChunkSequence())
+.init((common)=>{})
+.onError((proc, err)=>{
+	console.log("--- An error occurred.");
+	console.log(err); })
+.then((proc)=>{
+	console.log("Start main.");
+	let obj = GP.newGreenInstance(TFirstBeh, {x:22});
+	return {obj:obj, sel:"fooWith_and_", args:{with: 111, and:"Second"}}; })
+.sendMessageWithObjSelArgs()
+.then((proc)=>{
+	console.log(proc.retValue);
+	console.log("End main.");
+	return "Returned from main";})
+.end();
 
 var p = new GP.GreenProcess();
-p.push(seq.newFrame({})).resume();
+p.push(mainSeq.newFrame({})).resume();
 p.withRetValueDo(function(r) { console.log(""+JSON.stringify(r)); });

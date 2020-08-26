@@ -51,6 +51,11 @@ test02:
 		echo "PASS: Comparing output."; \
 		else echo "FAIL: Comparing output."; fi
 
+.PHONY: test03
+test03:
+	mkdir -p $(OUT_DIR)
+	nodejs test03.js
+
 .PHONY: testLeaks
 testLeaks:
 	@echo "# Run the following command:"

@@ -30,6 +30,14 @@ class GreenProcess {
 		return this.topFrame.common;
 	}
 
+	get self() {
+		return this.topFrame.sequenceFrame.receiver;
+	}
+
+	get sequenceFrame() {
+		return this.topFrame.sequenceFrame;
+	}
+
 	get topFrame() {
 		return this._stack[this._stack.length-1];
 	}
@@ -110,6 +118,14 @@ class GreenAbstractFrame {
 
 	get chunkVars() { return this._chunkVars; }
 
+	get receiver() {
+		return this.chunkVars.receiver;
+	}
+
+	set receiver(obj) {
+		this.chunkVars.receiver = obj;
+	}
+
 	set currentCont(aFunction) {
 		this._currentCont = aFunction;
 	}
@@ -137,6 +153,7 @@ class GreenSequenceFrame extends GreenAbstractFrame {
 		this._common = {};
 	}
 
+	get sequenceFrame() { return this }
 	get common() { return this._common; }
 	set common(aKeyedCol) { this._common = aKeyedCol; }
 }
@@ -275,12 +292,19 @@ class GreenSendMessageWithObjSelArgsChunk extends GreenAbstractChunk {
 		frameVars.receiver = proc.retValue.obj;
 		frameVars.selector = proc.retValue.sel;
 		frameVars.args = proc.retValue.args;
-		// proc.push(seq.newFrame({}));
+		let seq = frameVars.receiver.__greenBeh[frameVars.selector];
+		if (seq) {
+			let nf = seq.newFrame(frameVars.args);
+			nf.receiver = frameVars.receiver;
+			proc.push(nf);
+		} else {
+			seq = frameVars.receiver.__greenBeh["doesNotUnderstand:"];
+			proc.push(seq.newFrame(frame));
+		}
 		frame.currentCont = this.contFinish;
 	}
 
 	contFinish(proc, frame) {
-		proc.retValue = frame.chunkVars.index;
 		proc.pop();
 	}
 }
@@ -348,7 +372,12 @@ class GreenChunkSequence extends GreenAbstractChunk {
 	}
 }
 
+function newGreenInstance(beh, attrs) {
+	return Object.assign({}, attrs, {__greenBeh:beh});
+}
+
 //-----------------------------------------------
 exports.GreenProcess = GreenProcess;
 exports.GreenChunkSequence = GreenChunkSequence;
+exports.newGreenInstance = newGreenInstance;
 

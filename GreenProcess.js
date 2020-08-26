@@ -298,8 +298,8 @@ class GreenSendMessageWithObjSelArgsChunk extends GreenAbstractChunk {
 			nf.receiver = frameVars.receiver;
 			proc.push(nf);
 		} else {
-			seq = frameVars.receiver.__greenBeh["doesNotUnderstand:"];
-			proc.push(seq.newFrame(frame));
+			seq = frameVars.receiver.__greenBeh["doesNotUnderstand_"];
+			proc.push(seq.newFrame({frame:frame}));
 		}
 		frame.currentCont = this.contFinish;
 	}

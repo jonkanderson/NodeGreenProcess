@@ -8,7 +8,7 @@ DATA_DIR=./regressionData
 all:
 
 .PHONY: test
-test: test01 test02
+test: test01 test02 test03
 
 # Compare the sequences separately.  Also, the beginning output should match. 
 .PHONY: test01
@@ -54,7 +54,11 @@ test02:
 .PHONY: test03
 test03:
 	mkdir -p $(OUT_DIR)
-	nodejs test03.js
+	nodejs test03.js > $(OUT_DIR)/test03-out.txt
+	diff $(DATA_DIR)/test03-out.txt $(OUT_DIR)/test03-out.txt
+	@if [ "$$?" -eq "0" ]; then \
+		echo "PASS: Comparing output."; \
+		else echo "FAIL: Comparing output."; fi
 
 .PHONY: testLeaks
 testLeaks:

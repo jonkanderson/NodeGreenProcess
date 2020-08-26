@@ -1,0 +1,14 @@
+Start main.
+In foo.
+In superThing.
+In thisThing.
+1
+2
+3
+4
+5
+superThing got: Returned from thisThing
+Foo got: Returned from superThing
+main got: Returned from foo
+End main.
+"Returned from main"

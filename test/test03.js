@@ -23,7 +23,12 @@ const TBaseBeh = {
 		.init((common)=>{})
 		.onError(this._onError)
 		.then((proc)=>{
-			console.log("In superThing.");
+			console.log("In superThing."); })
+		.then((proc)=>{
+			return {obj:proc.self, sel:"thisThing", args:{}}; })
+		.sendMessageWithObjSelArgs()
+		.then((proc)=>{
+			console.log("superThing got: "+proc.retValue);
 			return "Returned from superThing";})
 		.end(),
 
@@ -45,6 +50,19 @@ const TFirstBeh = { __proto__:TBaseBeh,
 			return "Returned from foo";})
 		.end(),
 
+	thisThing:(new GP.GreenChunkSequence())
+		.init((common)=>{})
+		.onError(this._onError)
+		.then((proc)=>{
+			console.log("In thisThing."); })
+		.then((proc)=>{
+			return {from:1, to:proc.self.count, by:1}; })
+		.repeatWithFromToBy((proc, i)=>{
+			console.log(i); })
+		.then((proc)=>{
+			return "Returned from thisThing";})
+		.end(),
+
 	__endOfBehavior:null
 }
 
@@ -56,11 +74,11 @@ const mainSeq = (new GP.GreenChunkSequence())
 	console.log(err); })
 .then((proc)=>{
 	console.log("Start main.");
-	let obj = GP.newGreenInstance(TFirstBeh, {x:22});
+	let obj = GP.newGreenInstance(TFirstBeh, {count: 5});
 	return {obj:obj, sel:"fooWith_and_", args:{with: 111, and:"Second"}}; })
 .sendMessageWithObjSelArgs()
 .then((proc)=>{
-	console.log(proc.retValue);
+	console.log("main got: "+proc.retValue);
 	console.log("End main.");
 	return "Returned from main";})
 .end();
